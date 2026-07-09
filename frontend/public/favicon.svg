@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="cvFav" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0B860" />
+      <stop offset="1" stop-color="#C7862A" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#1A1410" />
+  <path d="M12 14h40a8 8 0 0 1 8 8v18a8 8 0 0 1-8 8H30l-12 10v-10h-6a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z" fill="url(#cvFav)" />
+  <g fill="#1A1410">
+    <rect x="22" y="28" width="4" height="12" rx="2" />
+    <rect x="30" y="24" width="4" height="20" rx="2" />
+    <rect x="38" y="30" width="4" height="8" rx="2" />
+  </g>
+</svg>

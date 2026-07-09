@@ -1,0 +1,125 @@
+# ChatVibe-AI 后端主配置
+# 作者：Alu  日期：2026-07-07
+# 敏感字段请通过 application-local.yml（已 gitignore）或环境变量覆盖
+server:
+  # 默认 8080 + 关闭 SSL，便于首启；启用 HTTPS 请参考 application-local.yml
+  port: ${SERVER_PORT:8080}
+  ssl:
+    enabled: true
+    certificate: classpath:keystore/chatvibe.icu+3.pem
+    certificate-private-key: classpath:keystore/chatvibe.icu+3-key.pem
+#    enabled: ${SSL_ENABLED:true}
+#    protocol: TLS
+#    enabled-protocols: [TLSv1.3]
+#    ciphers: [TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256]
+#    key-store: classpath:keystore/chatvibe-dev.p12
+#    key-store-password: ${SSL_KEYSTORE_PASSWORD:chatvibe}
+#    key-store-type: PKCS12
+  servlet:
+    context-path: /
+  forward-headers-strategy: native
+
+spring:
+  application:
+    name: chatvibe-ai
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/chatvibe?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=true&verifyServerCertificate=false
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 11
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 60MB
+  # 数据库初始化：启动时执行 schema.sql + data.sql（幂等）
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: true
+  ai:
+    openai:
+      # 阿里通义千问 OpenAI 兼容模式
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      api-key: ${AI_API_KEY:}
+      chat:
+        options:
+          model: qwen3.6-max-preview
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-v4
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# ChatVibe 业务配置
+chatvibe:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:please-override-in-local-config-or-env-at-least-32-chars-long}
+      expiration-ms: 604800000  # 7 天
+      issuer: chatvibe-ai
+    aes:
+      # AES-256-GCM 密钥（32 字节 base64 或 raw string）；务必在 local 配置中覆盖
+      key: ${AES_KEY:chatvibe-aes-key-change-me-32-bytes!}
+    cors:
+      allowed-origins:
+        - http://localhost:5173
+        - https://localhost:5173
+    rate-limit:
+      login-per-minute: 5
+      ai-per-minute: 30
+    # 硬编码单用户：符合个人开发者备案要求，禁用公开注册
+    hardcoded-user:
+      username: Alu
+      # BCrypt 哈希：真实值在 application-local.yml（已 gitignore）或通过 HASHED_PASSWORD 环境变量注入
+      # 生成方法：运行 backend 的 PasswordHashGenerator 测试类
+      password: '{bcrypt}$2a$10$CHANGE_ME_generate_real_hash_in_application_local_yml'
+      role: OWNER
+  pdf:
+    storage-dir: ${PDF_STORAGE:./data/pdf}
+  vector:
+    # 使用 SimpleVectorStore（持久化到本地文件）以减少外部依赖
+    store-file: ${VECTOR_STORE:./data/vector-store.json}
+  content-filter:
+    # 敏感词文件（每行一个）
+    blocklist-file: classpath:blocklist.txt
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+logging:
+  level:
+    icu.chatvibe_ai: INFO
+    org.springframework.security: INFO
+    org.springframework.ai: INFO

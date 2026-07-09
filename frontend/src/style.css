@@ -1,0 +1,211 @@
+@import '@fontsource/fraunces/600.css';
+@import '@fontsource/fraunces/700.css';
+@import '@fontsource/geist/400.css';
+@import '@fontsource/geist/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== 主题变量：黑夜（默认当前主题） ===== */
+:root,
+[data-theme='dark'] {
+  --cv-espresso: 26 20 16; /* #1A1410 主背景 */
+  --cv-cocoa: 42 31 24; /* #2A1F18 卡片表面 */
+  --cv-mocha: 61 46 35; /* #3D2E23 边框/悬浮 */
+  --cv-cream: 245 235 221; /* #F5EBDD 深底文字 */
+  --cv-amber-400: 240 184 96; /* #F0B860 */
+  --cv-amber-500: 232 163 61; /* #E8A33D */
+  --cv-amber-600: 199 134 42; /* #C7862A */
+  --cv-terracotta: 199 91 60; /* #C75B3C */
+  --cv-moss: 123 160 91; /* #7BA05B */
+  --cv-blob-1: rgba(232, 163, 61, 0.2);
+  --cv-blob-2: rgba(199, 91, 60, 0.1);
+  --cv-blob-3: rgba(61, 46, 35, 0.3);
+  --cv-grid: rgba(245, 235, 221, 0.6);
+}
+
+/* ===== 主题变量：白天（白色为主） ===== */
+[data-theme='light'] {
+  --cv-espresso: 255 255 255; /* #FFFFFF 主背景 */
+  --cv-cocoa: 248 245 240; /* #F8F5F0 卡片表面 */
+  --cv-mocha: 224 215 200; /* #E0D7C8 边框 */
+  --cv-cream: 42 31 24; /* #2A1F18 正文文字 */
+  --cv-amber-400: 217 119 6; /* #D97706 强调 */
+  --cv-amber-500: 180 83 9; /* #B45309 主按钮 */
+  --cv-amber-600: 146 64 14; /* #92400E 深强调 */
+  --cv-terracotta: 190 74 43; /* #BE4A2B */
+  --cv-moss: 101 138 92; /* #658A5C */
+  --cv-blob-1: rgba(232, 163, 61, 0.15);
+  --cv-blob-2: rgba(199, 91, 60, 0.08);
+  --cv-blob-3: rgba(180, 83, 9, 0.08);
+  --cv-grid: rgba(61, 46, 35, 0.35);
+}
+
+@layer base {
+  html {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-espresso text-cream font-sans min-h-screen antialiased;
+    margin: 0;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 选区颜色：琥珀 */
+  ::selection {
+    background-color: rgb(var(--cv-amber-500));
+    color: rgb(var(--cv-espresso));
+  }
+
+  /* 自定义滚动条：琥珀滑块 + cocoa 轨道 */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--cv-cocoa));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--cv-amber-500));
+    border-radius: 9999px;
+    border: 2px solid rgb(var(--cv-cocoa));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--cv-amber-400));
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: theme('fontFamily.display');
+    color: rgb(var(--cv-cream));
+  }
+}
+
+@layer components {
+  /* 玻璃拟态容器 */
+  .glass {
+    @apply backdrop-blur-md bg-white/5 border border-white/10;
+  }
+
+  /* 琥珀光晕阴影 */
+  .amber-glow {
+    box-shadow: theme('boxShadow.glow');
+  }
+}
+
+/* ===== 关键帧动画 ===== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+/* ===== 动画工具类 ===== */
+.animate-fade-up {
+  animation: fadeUp 0.5s ease-out both;
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+.animate-float {
+  animation: floatY 6s ease-in-out infinite;
+}
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Markdown 渲染容器内的排版 */
+.md-body {
+  @apply leading-relaxed text-cream/90 break-words;
+}
+.md-body :where(p) {
+  @apply my-2;
+}
+.md-body :where(h1, h2, h3, h4) {
+  @apply font-display text-cream mt-4 mb-2 font-semibold;
+}
+.md-body :where(ul, ol) {
+  @apply my-2 pl-5;
+}
+.md-body :where(ul) {
+  @apply list-disc;
+}
+.md-body :where(ol) {
+  @apply list-decimal;
+}
+.md-body :where(a) {
+  @apply text-amber-400 underline underline-offset-2;
+}
+.md-body :where(code) {
+  @apply bg-cocoa text-amber-400 rounded px-1.5 py-0.5 text-sm font-mono;
+}
+.md-body :where(pre) {
+  @apply bg-cocoa border border-mocha rounded-lg p-3 my-3 overflow-x-auto;
+}
+.md-body :where(pre) :where(code) {
+  @apply bg-transparent text-cream p-0;
+}
+.md-body :where(blockquote) {
+  @apply border-l-2 border-amber-500 pl-3 italic text-cream/70 my-2;
+}
+.md-body :where(table) {
+  @apply w-full my-3 text-left border-collapse;
+}
+.md-body :where(th, td) {
+  @apply border border-mocha px-2 py-1;
+}

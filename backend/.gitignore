@@ -1,0 +1,46 @@
+# Build output
+target/
+build/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.springBeans
+.sts4-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / local config —— 严禁提交
+application-local.yml
+application-prod.yml
+application-secret.yml
+*.p12
+*.pem
+*.key
+*.crt
+*.jks
+keystore/
+
+# Runtime data
+data/
+logs/
+*.log
+
+# Maven local repo (sandbox workaround)
+.m2-repo/
+.m2/
+
+# Help
+HELP.md

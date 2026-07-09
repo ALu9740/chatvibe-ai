@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 64" fill="none" font-family="Fraunces, Georgia, serif">
+  <defs>
+    <linearGradient id="cvAmber" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0B860" />
+      <stop offset="1" stop-color="#C7862A" />
+    </linearGradient>
+  </defs>
+  <path d="M12 8h40a8 8 0 0 1 8 8v26a8 8 0 0 1-8 8H30l-12 10v-10h-6a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8Z" fill="url(#cvAmber)" />
+  <g fill="#1A1410">
+    <rect x="22" y="24" width="4" height="14" rx="2" />
+    <rect x="30" y="20" width="4" height="22" rx="2" />
+    <rect x="38" y="26" width="4" height="10" rx="2" />
+  </g>
+  <text x="74" y="42" font-size="30" font-weight="700" fill="#F5EBDD">ChatVibe</text>
+</svg>
